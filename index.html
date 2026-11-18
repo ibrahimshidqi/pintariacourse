@@ -1,66 +1,53 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#eff6ff">
     <title>Pintaria Course - Bimbel Matematika</title>
     <link id="dynamicFavicon" rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1Red23JZ7zN3yFFDQ5aVISnPvdFMLUduj=w800">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
-        iframe {
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Quicksand:wght@600;700;800&display=swap');
+        
+        html, body {
             width: 100%;
-            height: 100dvh;
-            border: none;
-            display: block;
+            min-height: 100dvh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
         }
-        .loader {
-            position: fixed;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: #ffffff;
-            color: #1e3a8a;
-            text-align: center;
-            padding: 24px;
-            z-index: 10;
+        h1, h2, h3, .font-heading { font-family: 'Quicksand', sans-serif; }
+        
+        .float-anim { animation: float 6s ease-in-out infinite; }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
         }
-        .btn-fallback {
-            margin-top: 16px;
-            padding: 12px 24px;
-            background: #2563eb;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 999px;
-            font-weight: 600;
-            font-size: 14px;
+        
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+
+        .tutor-card-transition {
+            transition: all 0.45s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body>
-    <div id="fallbackBox" class="loader" style="display: none;">
-        <p style="font-weight: 700; font-size: 18px; margin: 0 0 8px;">Membuka Pintaria Course...</p>
-        <p style="font-size: 14px; color: #64748b; margin: 0;">Jika halaman belum muncul otomatis, ketuk tombol di bawah ini:</p>
-        <a id="directLink" class="btn-fallback" href="https://script.google.com/macros/s/AKfycbzUUtyn-cqUvAdNw3bT9yZeZT4yJ1G9IzbhDDbJCjvrG7NkkKHiUOzRTxisb7FNg5CrhA/exec">Buka Website Pintaria Course</a>
-    </div>
+<body class="text-gray-600 antialiased">
 
-    <iframe id="mainFrame" src="https://script.google.com/macros/s/AKfycbzUUtyn-cqUvAdNw3bT9yZeZT4yJ1G9IzbhDDbJCjvrG7NkkKHiUOzRTxisb7FNg5CrhA/exec" allow="clipboard-write"></iframe>
-
+    <!-- Konfigurasi Favicon Zoom & PWA Setup -->
     <script>
         (function() {
-            var gasUrl = "https://script.google.com/macros/s/AKfycbzUUtyn-cqUvAdNw3bT9yZeZT4yJ1G9IzbhDDbJCjvrG7NkkKHiUOzRTxisb7FNg5CrhA/exec";
-            var ua = navigator.userAgent || navigator.vendor || window.opera;
-            // Deteksi In-App Browser (Instagram, TikTok, Facebook, Threads, Line)
-            var isInApp = /Instagram|FBAN|FBAV|BytedanceWebview|TikTok|Musical_ly|Barcelona|Line/i.test(ua);
-
-            if (isInApp) {
-                document.getElementById("mainFrame").style.display = "none";
-                document.getElementById("fallbackBox").style.display = "flex";
-                window.location.replace(gasUrl);
-            }
-
-            // Favicon Zoom
             var img = new Image();
             img.crossOrigin = "Anonymous";
             img.src = "https://lh3.googleusercontent.com/d/1Red23JZ7zN3yFFDQ5aVISnPvdFMLUduj=w800";
@@ -78,7 +65,1229 @@
                 } catch (e) {}
             };
         })();
+
+        const manifestData = {
+            "name": "Pintaria Course",
+            "short_name": "Pintaria",
+            "start_url": ".",
+            "display": "standalone",
+            "orientation": "any",
+            "background_color": "#eff6ff",
+            "theme_color": "#3B82F6",
+            "description": "Bimbel Matematika Pintaria Course",
+            "icons": [{"src": "https://lh3.googleusercontent.com/d/1Red23JZ7zN3yFFDQ5aVISnPvdFMLUduj=w800", "sizes": "512x512", "type": "image/png"}]
+        };
+        const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/json'});
+        const manifestUrl = URL.createObjectURL(manifestBlob);
+        document.head.insertAdjacentHTML('beforeend', `<link rel="manifest" href="${manifestUrl}">`);
+
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installBanner').classList.remove('hidden');
+        });
+        
+        function installPWA() {
+            if(deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') document.getElementById('installBanner').classList.add('hidden');
+                    deferredPrompt = null;
+                });
+            }
+        }
     </script>
+
+    <!-- Tombol WhatsApp Melayang (Floating WA) -->
+    <a href="https://wa.me/6285196404990?text=Halo%20Kak%20Baim!%20Saya%20kepo%20dengan%20Pintaria%20Course,%20boleh%20tanya-tanya%20dulu?" 
+       target="_blank" 
+       aria-label="Chat WhatsApp Pintaria Course"
+       class="fixed bottom-6 right-6 z-50 bg-green-500 text-white w-14 h-14 rounded-full flex items-center justify-center text-3xl shadow-2xl hover:bg-green-600 hover:scale-110 transition-transform animate-bounce hover:animate-none">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <!-- Navbar Full-Width Presisi Tengah -->
+    <nav class="w-full bg-white text-blue-900 px-4 sm:px-8 pt-2 pb-4 sm:pt-3 sm:pb-5 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl w-full mx-auto flex justify-between items-center">
+            <a href="#" class="font-heading font-extrabold text-xl sm:text-2xl flex items-center gap-2.5 leading-none">
+                <img src="https://lh3.googleusercontent.com/d/1Red23JZ7zN3yFFDQ5aVISnPvdFMLUduj=w800" alt="Logo Pintaria" class="w-9 h-9 sm:w-11 sm:h-11 object-contain block"> 
+                <span class="tracking-tight">Pintaria Course</span>
+            </a>
+            <div class="hidden md:flex gap-7 lg:gap-8 font-semibold items-center leading-none">
+                <a href="#cara-belajar" class="hover:text-blue-500 transition py-2">Cara Belajar</a>
+                <a href="#profil" class="hover:text-blue-500 transition py-2">Tutor</a>
+                <a href="#program" class="hover:text-blue-500 transition py-2">Program</a>
+                <a href="#testimoni" class="hover:text-blue-500 transition py-2">Testimoni</a>
+                <a href="#daftar" class="bg-yellow-400 text-blue-900 px-6 py-2.5 rounded-full font-bold hover:bg-yellow-300 hover:scale-105 transition-all shadow-md inline-flex items-center justify-center">Daftar Sekarang</a>
+            </div>
+            <div class="md:hidden flex items-center">
+                <a href="#daftar" class="bg-yellow-400 text-blue-900 px-4 py-2 rounded-full font-bold text-sm shadow-md inline-flex items-center justify-center leading-none">Daftar</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- PWA Install Banner -->
+    <div id="installBanner" class="hidden w-full bg-blue-100 text-blue-900 text-center p-3 text-sm font-bold flex justify-center items-center gap-4 border-b border-blue-200">
+        <span><i class="fa-solid fa-mobile-screen-button mr-2"></i> Install Aplikasi Pintaria (Full-Screen) di perangkat kamu!</span>
+        <button onclick="installPWA()" class="bg-blue-600 text-white px-4 py-1.5 rounded-full text-xs hover:bg-blue-700 transition">Install</button>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="w-full min-h-[calc(100dvh-76px)] bg-blue-50 flex flex-col justify-between relative overflow-hidden">
+        <div class="max-w-7xl w-full mx-auto px-4 sm:px-8 my-auto py-10 md:py-16 flex flex-col md:flex-row items-center justify-between gap-10">
+            <div class="md:w-1/2 text-center md:text-left z-10">
+                <span class="inline-block bg-blue-100 text-blue-800 font-bold text-xs sm:text-sm px-4 py-1.5 rounded-full mb-4">
+                    <i class="fa-solid fa-sparkles text-yellow-500 mr-1.5"></i> Bimbel Matematika SD • SMP • SMA
+                </span>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-blue-900 leading-tight mb-6">
+                    Mencetak Generasi Pintar Matematika!
+                </h1>
+                <p class="text-base sm:text-lg lg:text-xl text-gray-600 mb-8 leading-relaxed max-w-xl mx-auto md:mx-0">
+                    Bimbel Matematika ramah anak untuk SD, SMP, & SMA. Suasana belajar menyenangkan, materi mudah dipahami, dan nilai memuaskan.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                    <a href="#daftar" class="inline-flex items-center justify-center bg-yellow-400 text-blue-900 font-bold text-lg px-8 py-4 rounded-full hover:bg-yellow-300 hover:scale-105 transition-all shadow-lg">
+                        Konsultasi Gratis <i class="fa-brands fa-whatsapp ml-2 text-xl"></i>
+                    </a>
+                    <a href="#program" class="inline-flex items-center justify-center bg-white text-blue-900 font-bold text-lg px-8 py-4 rounded-full border-2 border-blue-100 hover:border-blue-300 transition-all shadow-sm">
+                        Lihat Program
+                    </a>
+                </div>
+            </div>
+            <div class="md:w-1/2 flex justify-center z-10">
+                <img src="https://lh3.googleusercontent.com/d/1Red23JZ7zN3yFFDQ5aVISnPvdFMLUduj=w800" alt="Maskot Pintaria" class="w-56 sm:w-72 lg:w-96 object-contain float-anim drop-shadow-2xl">
+            </div>
+        </div>
+        <svg class="w-full h-12 md:h-20 block -mb-1 shrink-0" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#ffffff" fill-opacity="1" d="M0,160L80,170.7C160,181,320,203,480,197.3C640,192,800,160,960,149.3C1120,139,1280,149,1360,154.7L1440,160L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path></svg>
+    </section>
+
+    <!-- Cara Belajar di Pintaria (Alur) -->
+    <section id="cara-belajar" class="w-full bg-white pt-12 pb-8 px-4 sm:px-8 z-10 relative">
+        <div class="max-w-7xl mx-auto text-center">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-blue-900 mb-3">Cara Belajar di Pintaria</h2>
+            <p class="text-gray-500 mb-12 max-w-2xl mx-auto text-base md:text-lg">Langkah mudah untuk mulai meningkatkan nilai matematika anak.</p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="flex flex-col items-center bg-white p-4">
+                    <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-3xl mb-4 shadow-sm border-4 border-white">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-lg text-blue-900 mb-2">1. Daftar & Konsultasi</h3>
+                    <p class="text-sm text-gray-500">Hubungi kami via form atau WhatsApp untuk mendiskusikan kebutuhan belajar.</p>
+                </div>
+                
+                <div class="flex flex-col items-center bg-white p-4">
+                    <div class="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-500 text-3xl mb-4 shadow-sm border-4 border-white">
+                        <i class="fa-solid fa-list-check"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-lg text-blue-900 mb-2">2. Tes Pemetaan</h3>
+                    <p class="text-sm text-gray-500">Siswa mengikuti asesmen awal agar metode dan level materi disesuaikan dengan kemampuannya.</p>
+                </div>
+
+                <div class="flex flex-col items-center bg-white p-4">
+                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center text-green-500 text-3xl mb-4 shadow-sm border-4 border-white">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-lg text-blue-900 mb-2">3. Mulai Belajar</h3>
+                    <p class="text-sm text-gray-500">Sesi belajar seru dan interaktif sesuai jadwal (Privat/Grup, Online/Offline).</p>
+                </div>
+
+                <div class="flex flex-col items-center bg-white p-4">
+                    <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center text-purple-500 text-3xl mb-4 shadow-sm border-4 border-white">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </div>
+                    <h3 class="font-heading font-bold text-lg text-blue-900 mb-2">4. Report Berkala</h3>
+                    <p class="text-sm text-gray-500">Orang tua menerima laporan evaluasi progres belajar siswa secara rutin.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ombak Atas Keunggulan (Warna Biru Segar ala Testimoni) -->
+    <svg class="w-full h-12 md:h-20 block -mb-1 bg-white" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#3b82f6" fill-opacity="1" d="M0,160L120,176C240,192,480,224,720,218.7C960,213,1200,171,1320,149.3L1440,128L1440,320L1320,320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z"></path></svg>
+
+    <!-- Bagian Value Proposition: Kenapa Harus Bimbel di Pintaria Course? -->
+    <section class="w-full bg-blue-500 text-white py-14 md:py-20 px-4 sm:px-8 relative overflow-hidden">
+        <div class="absolute -left-24 top-10 w-80 h-80 bg-blue-400/40 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="absolute right-0 bottom-0 w-96 h-96 bg-blue-600/40 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 items-center gap-10 lg:gap-12">
+            
+            <!-- Kolom Kiri: Judul Besar + Maskot -->
+            <div class="lg:col-span-4 text-center lg:text-left flex flex-col items-center lg:items-start">
+                <span class="inline-block bg-white/20 text-yellow-300 font-bold text-xs uppercase tracking-wider px-4 py-1.5 rounded-full mb-3 border border-white/25">
+                    Value Utama Kami
+                </span>
+                <h2 class="font-heading text-3xl sm:text-4xl font-extrabold leading-tight text-white mb-4">
+                    Kenapa Harus Bimbel di <span class="text-yellow-300">Pintaria Course?</span>
+                </h2>
+                <p class="text-blue-50 text-sm sm:text-base leading-relaxed mb-8 max-w-md">
+                    Kami tidak sekadar membantu anak mengerjakan PR, tapi mengubah cara pandang mereka agar percaya diri menaklukkan Matematika.
+                </p>
+                <div class="relative flex items-center justify-center w-64 h-64 sm:w-72 sm:h-72 mx-auto lg:mx-0">
+                    <div class="absolute inset-4 bg-white/20 rounded-full blur-2xl pointer-events-none"></div>
+                    <img src="https://lh3.googleusercontent.com/d/1Red23JZ7zN3yFFDQ5aVISnPvdFMLUduj=w800" alt="Maskot Pintaria Course" class="w-44 sm:w-52 lg:w-56 object-contain float-anim relative z-10 drop-shadow-2xl">
+                </div>
+            </div>
+
+            <!-- Kolom Kanan: Grid 2x2 Value Proposition -->
+            <div class="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                
+                <div class="bg-blue-600/60 backdrop-blur-sm border border-blue-400/50 rounded-3xl p-6 md:p-7 hover:border-yellow-300/80 transition-colors shadow-md">
+                    <div class="flex items-center gap-3.5 mb-3">
+                        <span class="w-10 h-10 rounded-xl bg-yellow-400 text-blue-900 flex items-center justify-center text-lg shrink-0 shadow-sm">
+                            <i class="fa-solid fa-brain"></i>
+                        </span>
+                        <h3 class="font-heading text-xl font-extrabold text-yellow-300 leading-snug">
+                            Paham Logika, Bukan Hafal Rumus
+                        </h3>
+                    </div>
+                    <p class="text-blue-50 text-sm leading-relaxed">
+                        Kami membangun fondasi <em>math logic</em> dari akar konsepnya ditambah metode berhitung praktis seperti Jarimatika, sehingga anak mampu memecahkan berbagai variasi soal dengan nalarnya sendiri.
+                    </p>
+                </div>
+
+                <div class="bg-blue-600/60 backdrop-blur-sm border border-blue-400/50 rounded-3xl p-6 md:p-7 hover:border-yellow-300/80 transition-colors shadow-md">
+                    <div class="flex items-center gap-3.5 mb-3">
+                        <span class="w-10 h-10 rounded-xl bg-yellow-400 text-blue-900 flex items-center justify-center text-lg shrink-0 shadow-sm">
+                            <i class="fa-solid fa-trophy"></i>
+                        </span>
+                        <h3 class="font-heading text-xl font-extrabold text-yellow-300 leading-snug">
+                            Terbukti Mendongkrak Nilai & Prestasi
+                        </h3>
+                    </div>
+                    <p class="text-blue-50 text-sm leading-relaxed">
+                        Rekam jejak nyata membantu siswa yang semula takut matematika menjadi percaya diri, menaikkan nilai rapor dan ujian sekolah, hingga meraih medali di kompetisi matematika bergengsi.
+                    </p>
+                </div>
+
+                <div class="bg-blue-600/60 backdrop-blur-sm border border-blue-400/50 rounded-3xl p-6 md:p-7 hover:border-yellow-300/80 transition-colors shadow-md">
+                    <div class="flex items-center gap-3.5 mb-3">
+                        <span class="w-10 h-10 rounded-xl bg-yellow-400 text-blue-900 flex items-center justify-center text-lg shrink-0 shadow-sm">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </span>
+                        <h3 class="font-heading text-xl font-extrabold text-yellow-300 leading-snug">
+                            Adaptif Nasional, Cambridge & IB
+                        </h3>
+                    </div>
+                    <p class="text-blue-50 text-sm leading-relaxed">
+                        Materi belajar, bank soal, hingga modul interaktif dirancang khusus menyesuaikan kurikulum dan kebutuhan spesifik tiap siswa—mulai dari Kurikulum Merdeka, Cambridge, hingga IB.
+                    </p>
+                </div>
+
+                <div class="bg-blue-600/60 backdrop-blur-sm border border-blue-400/50 rounded-3xl p-6 md:p-7 hover:border-yellow-300/80 transition-colors shadow-md">
+                    <div class="flex items-center gap-3.5 mb-3">
+                        <span class="w-10 h-10 rounded-xl bg-yellow-400 text-blue-900 flex items-center justify-center text-lg shrink-0 shadow-sm">
+                            <i class="fa-solid fa-shield-heart"></i>
+                        </span>
+                        <h3 class="font-heading text-xl font-extrabold text-yellow-300 leading-snug">
+                            Pendampingan Personal & Transparan
+                        </h3>
+                    </div>
+                    <p class="text-blue-50 text-sm leading-relaxed">
+                        Dibimbing tutor sabar dan komunikatif dengan fasilitas lengkap: rekaman sesi YouTube untuk diputar ulang, jadwal fleksibel (<em>reschedule</em>), serta <em>report</em> evaluasi progres rutin bagi orang tua.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Ombak Bawah Keunggulan Menuju Tim Pengajar -->
+    <svg class="w-full h-12 md:h-20 block -mb-1 bg-blue-500" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#eff6ff" fill-opacity="1" d="M0,128L120,149.3C240,171,480,213,720,213.3C960,213,1200,171,1320,149.3L1440,128L1440,320L1320,320C1200,320,960,320,720,320C480,320,240,320,120,320L0,320Z"></path></svg>
+
+    <!-- Profil Tim Tutor (Smooth Center-Focus Carousel) -->
+    <section id="profil" class="w-full bg-blue-50 pt-10 pb-16 px-4 sm:px-8 overflow-hidden">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-6">
+                <span class="inline-block bg-yellow-400/30 text-blue-900 font-bold text-xs uppercase tracking-wider px-4 py-1.5 rounded-full mb-2">Tim Pengajar</span>
+                <h2 class="font-heading text-3xl md:text-4xl font-extrabold text-blue-900">Kenalan dengan Tutor Pintaria!</h2>
+                <p class="text-gray-500 mt-2 max-w-2xl mx-auto text-sm md:text-base">Geser kartu ke samping atau tekan tombol panah untuk mengenal pengajar kami.</p>
+            </div>
+
+            <div class="relative max-w-6xl mx-auto">
+                <button type="button" onclick="geserTutor(-1)" aria-label="Tutor Sebelumnya" class="absolute left-1 md:left-0 top-1/2 -translate-y-1/2 z-30 w-11 h-11 md:w-12 md:h-12 rounded-full bg-white text-blue-900 shadow-xl border border-blue-100 flex items-center justify-center text-base md:text-lg hover:bg-yellow-400 active:scale-95 transition-all">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+
+                <div id="tutorCarouselStage" onscroll="updateTutorFocus()" class="flex items-center gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar py-8 px-[10%] sm:px-[20%] md:px-[33%]">
+                    <!-- Di-render otomatis via JS -->
+                </div>
+
+                <button type="button" onclick="geserTutor(1)" aria-label="Tutor Berikutnya" class="absolute right-1 md:right-0 top-1/2 -translate-y-1/2 z-30 w-11 h-11 md:w-12 md:h-12 rounded-full bg-white text-blue-900 shadow-xl border border-blue-100 flex items-center justify-center text-base md:text-lg hover:bg-yellow-400 active:scale-95 transition-all">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <div id="tutorDots" class="flex justify-center items-center gap-2.5 mt-1">
+                <!-- Di-render otomatis via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Program & Pilihan Belajar -->
+    <section id="program" class="w-full bg-blue-50 pt-8 pb-20 px-4 sm:px-8 relative">
+        <div class="max-w-6xl mx-auto relative z-10">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl md:text-4xl font-extrabold text-blue-900 mb-3">Program & Pilihan Belajar</h2>
+                <p class="text-gray-500 max-w-2xl mx-auto text-base md:text-lg">Pilih jenjang sekolah dan geser untuk melihat detail kelas Online maupun Offline (Privat & Grup).</p>
+            </div>
+
+            <!-- Bar Pilih Jenjang Sekolah -->
+            <div class="bg-white p-3.5 md:px-8 md:py-4 rounded-3xl shadow-md border border-blue-100 max-w-2xl mx-auto mb-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <span class="font-heading font-bold text-blue-900 text-base">Pilih Jenjang Sekolah:</span>
+                <div class="flex gap-2 bg-gray-100 p-1.5 rounded-2xl w-full sm:w-auto justify-center">
+                    <button type="button" onclick="pilihJenjang('SD')" id="tab-SD" class="jenjang-btn px-5 py-2.5 rounded-xl font-bold text-sm transition-all bg-yellow-400 text-blue-900 shadow-sm">
+                        SD / MI
+                    </button>
+                    <button type="button" onclick="pilihJenjang('SMP')" id="tab-SMP" class="jenjang-btn px-5 py-2.5 rounded-xl font-bold text-sm transition-all text-gray-600 hover:text-blue-900">
+                        SMP / MTs
+                    </button>
+                    <button type="button" onclick="pilihJenjang('SMA')" id="tab-SMA" class="jenjang-btn px-5 py-2.5 rounded-xl font-bold text-sm transition-all text-gray-600 hover:text-blue-900">
+                        SMA / SMK
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bar Navigasi Slide Khusus Layar HP -->
+            <div class="flex md:hidden items-center justify-between max-w-md mx-auto mb-4 px-2">
+                <button type="button" onclick="geserProgram(-1)" class="w-10 h-10 rounded-full bg-white text-blue-900 shadow-md border border-blue-100 flex items-center justify-center active:scale-95">
+                    <i class="fa-solid fa-chevron-left text-sm"></i>
+                </button>
+                <div class="flex items-center gap-2 text-xs font-bold text-blue-800 bg-white/80 px-4 py-1.5 rounded-full border border-blue-100">
+                    <span id="programSlideLabel">Slide 1/2: Bimbel Online</span>
+                    <i class="fa-solid fa-arrows-left-right text-blue-500"></i>
+                </div>
+                <button type="button" onclick="geserProgram(1)" class="w-10 h-10 rounded-full bg-white text-blue-900 shadow-md border border-blue-100 flex items-center justify-center active:scale-95">
+                    <i class="fa-solid fa-chevron-right text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Kontainer Kartu Program -->
+            <div id="programCardsContainer" onscroll="updateProgramDots()" class="flex md:grid md:grid-cols-2 gap-6 md:gap-8 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar pb-4">
+                <!-- Di-render via JS -->
+            </div>
+
+            <!-- Dots Indikator Slide Khusus Layar HP -->
+            <div id="programDotsMobile" class="flex md:hidden justify-center items-center gap-2.5 mt-2 mb-4">
+                <button type="button" onclick="keSlideProgram(0)" id="prog-dot-0" class="w-8 h-2.5 rounded-full bg-yellow-400 border border-blue-900/20 transition-all"></button>
+                <button type="button" onclick="keSlideProgram(1)" id="prog-dot-1" class="w-2.5 h-2.5 rounded-full bg-blue-200 transition-all"></button>
+            </div>
+
+            <!-- Catatan Bawah -->
+            <div class="mt-6 bg-white p-6 rounded-3xl text-blue-800 text-left max-w-4xl mx-auto border border-blue-100 shadow-sm flex gap-4 items-start">
+                <i class="fa-solid fa-circle-info text-2xl text-blue-500 mt-1"></i>
+                <div>
+                    <h4 class="font-heading font-bold text-lg mb-1">Informasi Tambahan Pintaria:</h4>
+                    <p class="text-sm md:text-base text-gray-600 leading-relaxed">
+                        Tersedia pilihan <strong>Kelas Privat (1-on-1, durasi 1 jam)</strong> maupun <strong>Kelas Grup (durasi 1,5 jam)</strong>. Paket tersedia mulai dari 1 Sesi (Trial), 4 Sesi, 8 Sesi, hingga 12 Sesi.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ombak Atas Testimoni -->
+    <svg class="w-full h-12 md:h-20 block -mb-1" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#3b82f6" fill-opacity="1" d="M0,192L80,181.3C160,171,320,149,480,154.7C640,160,800,192,960,197.3C1120,203,1280,181,1360,170.7L1440,160L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path></svg>
+
+    <!-- Testimoni Section (Carousel Slider + Poster Utuh) -->
+    <section id="testimoni" class="w-full bg-blue-500 py-14 px-4 sm:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-10 text-white">
+                <span class="inline-block bg-white/20 text-white font-bold text-xs uppercase tracking-wider px-4 py-1.5 rounded-full mb-2">#CeritaPintaria</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold mb-3">Apa Kata Mereka?</h2>
+                <p class="text-blue-100 text-base md:text-lg max-w-2xl mx-auto">Bukti nyata perkembangan belajar dan pencapaian siswa bersama Tutor Pintaria.</p>
+            </div>
+            
+            <div class="relative">
+                <button type="button" onclick="geserTestimoni(-1)" aria-label="Testimoni Sebelumnya" class="absolute -left-2 md:-left-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 md:w-12 md:h-12 rounded-full bg-yellow-400 text-blue-900 shadow-xl flex items-center justify-center text-base md:text-lg hover:bg-yellow-300 active:scale-95 transition-all">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+
+                <div id="testimoniContainer" onscroll="updateTestimoniDots()" class="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar py-6 px-2">
+                    <!-- Data di-render via JS -->
+                </div>
+
+                <button type="button" onclick="geserTestimoni(1)" aria-label="Testimoni Berikutnya" class="absolute -right-2 md:-right-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 md:w-12 md:h-12 rounded-full bg-yellow-400 text-blue-900 shadow-xl flex items-center justify-center text-base md:text-lg hover:bg-yellow-300 active:scale-95 transition-all">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <div id="testimoniDots" class="flex justify-center items-center gap-2.5 mt-4">
+                <!-- Di-render via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Ombak Bawah Testimoni -->
+    <svg class="w-full h-12 md:h-20 block -mt-1 bg-gray-50" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#3b82f6" fill-opacity="1" d="M0,160L80,170.7C160,181,320,203,480,192C640,181,800,139,960,128C1120,117,1280,139,1360,149.3L1440,160L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path></svg>
+
+    <!-- FAQ Section -->
+    <section class="w-full py-12 px-4 sm:px-8 bg-gray-50">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-extrabold text-blue-900 mb-2">Pertanyaan Populer (FAQ)</h2>
+                <p class="text-gray-500">Hal-hal yang paling sering ditanyakan Parents.</p>
+            </div>
+
+            <details class="group bg-white rounded-3xl shadow-sm mb-4 border border-gray-100 cursor-pointer overflow-hidden transition-all">
+                <summary class="font-heading font-bold text-blue-900 text-base md:text-lg p-6 flex justify-between items-center outline-none">
+                    Apakah ada Kelas Percobaan (Trial Class)?
+                    <i class="fa-solid fa-chevron-down group-open:rotate-180 transition-transform text-yellow-500"></i>
+                </summary>
+                <div class="px-6 pb-6 text-gray-600 text-sm md:text-base leading-relaxed border-t border-gray-50 pt-4">
+                    Tentu ada, Bund! Kami menyarankan Bunda untuk mengambil paket 1 Sesi (Trial) terlebih dahulu. Jika cocok dengan metode pengajaran Tutor Pintaria, Bunda bisa langsung melanjutkan ke Paket Bulanan.
+                </div>
+            </details>
+
+            <details class="group bg-white rounded-3xl shadow-sm mb-4 border border-gray-100 cursor-pointer overflow-hidden transition-all">
+                <summary class="font-heading font-bold text-blue-900 text-base md:text-lg p-6 flex justify-between items-center outline-none">
+                    Kalau anak sakit atau berhalangan, apakah sesinya hangus?
+                    <i class="fa-solid fa-chevron-down group-open:rotate-180 transition-transform text-yellow-500"></i>
+                </summary>
+                <div class="px-6 pb-6 text-gray-600 text-sm md:text-base leading-relaxed border-t border-gray-50 pt-4">
+                    Tentu tidak hangus. Kami sangat fleksibel! Bunda cukup menginfokan via WhatsApp kepada Tutor, dan kita akan mengatur jadwal pengganti (Reschedule) di hari lain sesuai kesepakatan bersama.
+                </div>
+            </details>
+
+            <details class="group bg-white rounded-3xl shadow-sm mb-4 border border-gray-100 cursor-pointer overflow-hidden transition-all">
+                <summary class="font-heading font-bold text-blue-900 text-base md:text-lg p-6 flex justify-between items-center outline-none">
+                    Aplikasi apa yang digunakan untuk Les Online?
+                    <i class="fa-solid fa-chevron-down group-open:rotate-180 transition-transform text-yellow-500"></i>
+                </summary>
+                <div class="px-6 pb-6 text-gray-600 text-sm md:text-base leading-relaxed border-t border-gray-50 pt-4">
+                    Untuk sesi online, kami menggunakan kombinasi mumpuni dari Zoom Meeting untuk komunikasi tatap muka dua arah, serta Canva Whiteboard dan Modul HTML Interaktif agar coretan rumus dan grafik terlihat secara langsung seperti belajar di papan tulis asli. Setiap sesi juga direkam dan diunggah ke YouTube (link khusus) agar bisa ditonton ulang.
+                </div>
+            </details>
+
+            <details class="group bg-white rounded-3xl shadow-sm mb-4 border border-gray-100 cursor-pointer overflow-hidden transition-all">
+                <summary class="font-heading font-bold text-blue-900 text-base md:text-lg p-6 flex justify-between items-center outline-none">
+                    Bagaimana sistem pembayarannya?
+                    <i class="fa-solid fa-chevron-down group-open:rotate-180 transition-transform text-yellow-500"></i>
+                </summary>
+                <div class="px-6 pb-6 text-gray-600 text-sm md:text-base leading-relaxed border-t border-gray-50 pt-4">
+                    Pembayaran sangat mudah. Dapat dilakukan melalui Transfer Bank/E-Wallet (BCA, Mandiri, GoPay, OVO). Pembayaran dilakukan di awal pengambilan paket (Per 4 sesi, 8 sesi, atau 12 sesi). Nanti akan kami kirimkan laporan sisa sesi secara rutin.
+                </div>
+            </details>
+        </div>
+    </section>
+
+    <!-- Daftar / Kontak -->
+    <section id="daftar" class="w-full py-16 px-4 sm:px-8">
+        <div class="max-w-5xl mx-auto bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border-4 border-blue-50 flex flex-col md:flex-row">
+            <div class="bg-blue-600 p-10 md:w-2/5 text-white flex flex-col justify-center relative overflow-hidden">
+                <div class="relative z-10">
+                    <h3 class="font-heading text-3xl font-bold mb-4">Mulai Perjalanan<br>Belajar Seru!</h3>
+                    <p class="text-blue-100 mb-8">Tinggalkan keraguan, mari belajar matematika dengan cara yang lebih menyenangkan bersama Pintaria Course.</p>
+                    <ul class="space-y-3 font-medium">
+                        <li><i class="fa-solid fa-check-circle text-yellow-400 mr-2"></i> Tutor Berpengalaman</li>
+                        <li><i class="fa-solid fa-check-circle text-yellow-400 mr-2"></i> Modul Interaktif & Video</li>
+                        <li><i class="fa-solid fa-check-circle text-yellow-400 mr-2"></i> Evaluasi Transparan</li>
+                    </ul>
+                </div>
+                <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-blue-500 rounded-full opacity-50"></div>
+                <div class="absolute top-10 -left-10 w-24 h-24 bg-yellow-400 rounded-full opacity-20"></div>
+            </div>
+            
+            <form id="formPendaftaran" onsubmit="submitForm(event)" class="p-8 sm:p-10 md:w-3/5 space-y-5">
+                <div>
+                    <label class="block text-sm font-bold text-blue-900 mb-2">Nama Lengkap Siswa</label>
+                    <input type="text" id="nama" required class="w-full px-5 py-3 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:border-blue-500 focus:bg-white focus:ring-0 outline-none transition">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-sm font-bold text-blue-900 mb-2">Kelas Asal / Fokus</label>
+                        <input type="text" id="kelas" required class="w-full px-5 py-3 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:border-blue-500 focus:bg-white outline-none transition" placeholder="Cth: SD Kls 5">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-blue-900 mb-2">Pilihan Paket</label>
+                        <select id="paket" required class="w-full px-5 py-3 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:border-blue-500 focus:bg-white outline-none transition cursor-pointer text-gray-700">
+                            <option value="">-- Pilih --</option>
+                            <option value="Privat Online">Privat Online</option>
+                            <option value="Privat Offline">Privat Offline</option>
+                            <option value="Grup Online">Grup Online</option>
+                            <option value="Grup Offline">Grup Offline</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-blue-900 mb-2">Nomor WhatsApp Aktif</label>
+                    <input type="tel" id="nowa" required class="w-full px-5 py-3 bg-gray-50 border-2 border-gray-100 rounded-2xl focus:border-blue-500 focus:bg-white outline-none transition" placeholder="08...">
+                </div>
+                <button type="submit" id="btnSubmit" class="w-full bg-yellow-400 text-blue-900 font-bold text-lg py-4 rounded-2xl mt-4 hover:bg-yellow-300 hover:-translate-y-1 transition-all shadow-lg flex justify-center items-center gap-2">
+                    Kirim & Hubungi Tutor <i class="fa-solid fa-paper-plane"></i>
+                </button>
+                <div id="submitMsg" class="hidden text-center font-bold text-green-600 mt-2">Mengarahkan ke WhatsApp Admin Pintaria...</div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Ombak Atas Footer -->
+    <svg class="w-full h-12 md:h-20 block -mb-1 bg-gray-50" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#3b82f6" fill-opacity="1" d="M0,192L80,181.3C160,171,320,149,480,154.7C640,160,800,192,960,197.3C1120,203,1280,181,1360,170.7L1440,160L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"></path></svg>
+
+    <!-- Footer Multi-Kolom Profesional -->
+    <footer class="w-full bg-blue-500 text-white pt-12 pb-24 md:pb-12 px-4 sm:px-8 relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-blue-400/60">
+                
+                <!-- Kolom 1: Brand, Kontak & Sosmed -->
+                <div class="lg:col-span-5 space-y-5">
+                    <a href="#" class="inline-flex items-center gap-3 bg-white/15 backdrop-blur-sm px-4 py-2.5 rounded-2xl border border-white/25">
+                        <div class="w-11 h-11 rounded-xl bg-white p-1.5 flex items-center justify-center shadow-sm shrink-0">
+                            <img src="https://lh3.googleusercontent.com/d/1Red23JZ7zN3yFFDQ5aVISnPvdFMLUduj=w800" alt="Logo Pintaria Course" class="w-full h-full object-contain">
+                        </div>
+                        <div>
+                            <span class="font-heading font-extrabold text-xl text-white block leading-none">Pintaria Course</span>
+                            <span class="text-[11px] font-semibold text-yellow-300 tracking-wide">Bimbel Matematika Ramah Anak</span>
+                        </div>
+                    </a>
+
+                    <p class="text-blue-50 text-sm leading-relaxed max-w-md">
+                        Lembaga bimbingan belajar matematika jenjang SD, SMP, dan SMA yang fokus membangun pemahaman logika dan rasa percaya diri anak dengan suasana belajar yang menyenangkan.
+                    </p>
+
+                    <ul class="space-y-2 text-sm font-medium text-blue-50">
+                        <li><a href="#cara-belajar" class="hover:text-yellow-300 transition inline-flex items-center gap-2"><i class="fa-solid fa-angle-right text-yellow-300 text-xs"></i> Cara Belajar di Pintaria</a></li>
+                        <li><a href="#profil" class="hover:text-yellow-300 transition inline-flex items-center gap-2"><i class="fa-solid fa-angle-right text-yellow-300 text-xs"></i> Tim Tutor Pengajar</a></li>
+                        <li><a href="#testimoni" class="hover:text-yellow-300 transition inline-flex items-center gap-2"><i class="fa-solid fa-angle-right text-yellow-300 text-xs"></i> Cerita & Testimoni Orang Tua</a></li>
+                    </ul>
+
+                    <div class="pt-2 space-y-2.5">
+                        <h4 class="font-heading font-bold text-lg text-white border-b-2 border-yellow-400 inline-block pb-1 mb-1">Kontak Kami</h4>
+                        <div class="flex items-center gap-3 text-sm text-blue-50">
+                            <i class="fa-brands fa-whatsapp text-yellow-300 text-base w-4 text-center"></i>
+                            <a href="https://wa.me/6285196404990?text=Halo%20Kak%20Baim!%20Saya%20mau%20tanya%20seputar%20Pintaria%20Course." target="_blank" class="hover:text-yellow-300 transition font-semibold">0851-9640-4990</a>
+                        </div>
+                        <div class="flex items-center gap-3 text-sm text-blue-50">
+                            <i class="fa-solid fa-envelope text-yellow-300 text-base w-4 text-center"></i>
+                            <a href="mailto:pintaria.course@gmail.com" class="hover:text-yellow-300 transition">pintaria.course@gmail.com</a>
+                        </div>
+                        <div class="flex items-center gap-3 text-sm text-blue-50">
+                            <i class="fa-solid fa-location-dot text-yellow-300 text-base w-4 text-center"></i>
+                            <span>Basis Operasional: Serang & Tangerang, Provinsi Banten</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 pt-2">
+                        <a href="https://www.instagram.com/pintaria.course" target="_blank" aria-label="Instagram Pintaria Course" class="w-10 h-10 rounded-full bg-white text-pink-600 hover:bg-yellow-400 hover:text-blue-900 flex items-center justify-center text-lg shadow-md transition-all hover:scale-110">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                        <a href="https://www.tiktok.com/@pintaria.course" target="_blank" aria-label="TikTok Pintaria Course" class="w-10 h-10 rounded-full bg-white text-gray-900 hover:bg-yellow-400 hover:text-blue-900 flex items-center justify-center text-lg shadow-md transition-all hover:scale-110">
+                            <i class="fa-brands fa-tiktok"></i>
+                        </a>
+                        <a href="https://wa.me/6285196404990" target="_blank" aria-label="WhatsApp Pintaria Course" class="w-10 h-10 rounded-full bg-white text-green-600 hover:bg-yellow-400 hover:text-blue-900 flex items-center justify-center text-lg shadow-md transition-all hover:scale-110">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Kolom 2: Program & Layanan -->
+                <div class="lg:col-span-3 space-y-4">
+                    <h4 class="font-heading font-bold text-lg text-white border-b-2 border-yellow-400 inline-block pb-1">Program & Layanan</h4>
+                    <ul class="space-y-3 text-sm font-semibold text-blue-50">
+                        <li>
+                            <a href="#program" onclick="pilihJenjang('SD')" class="hover:text-yellow-300 transition flex items-center gap-2">
+                                <i class="fa-solid fa-caret-right text-yellow-300"></i> Matematika SD / MI
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#program" onclick="pilihJenjang('SMP')" class="hover:text-yellow-300 transition flex items-center gap-2">
+                                <i class="fa-solid fa-caret-right text-yellow-300"></i> Matematika SMP / MTs
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#program" onclick="pilihJenjang('SMA')" class="hover:text-yellow-300 transition flex items-center gap-2">
+                                <i class="fa-solid fa-caret-right text-yellow-300"></i> Matematika SMA / SMK
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#daftar" onclick="pilihLayananFooter('Persiapan Olimpiade Math', 'Privat Online')" class="hover:text-yellow-300 transition flex items-center gap-2">
+                                <i class="fa-solid fa-caret-right text-yellow-300"></i> Persiapan Olimpiade Math
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#daftar" onclick="pilihLayananFooter('Persiapan TKA & Ujian', 'Privat Online')" class="hover:text-yellow-300 transition flex items-center gap-2">
+                                <i class="fa-solid fa-caret-right text-yellow-300"></i> Persiapan TKA & Ujian
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#daftar" onclick="pilihLayananFooter('', 'Privat Online')" class="hover:text-yellow-300 transition flex items-center gap-2">
+                                <i class="fa-solid fa-caret-right text-yellow-300"></i> Kelas Privat (1-on-1)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#daftar" onclick="pilihLayananFooter('', 'Grup Online')" class="hover:text-yellow-300 transition flex items-center gap-2">
+                                <i class="fa-solid fa-caret-right text-yellow-300"></i> Kelas Grup Interaktif
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Kolom 3: Jangkauan Area & Kurikulum -->
+                <div class="lg:col-span-4 space-y-5">
+                    <h4 class="font-heading font-bold text-lg text-white border-b-2 border-yellow-400 inline-block pb-1">Jangkauan & Kurikulum</h4>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
+                        <div class="bg-blue-600/60 border border-blue-400/50 rounded-2xl p-4">
+                            <div class="font-heading font-bold text-yellow-300 text-sm mb-2 flex items-center gap-2">
+                                <i class="fa-solid fa-house-user"></i> Bimbel Offline (Tutor ke Rumah)
+                            </div>
+                            <ul class="space-y-1.5 text-sm text-blue-50">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-caret-right text-yellow-300 text-xs"></i> Kota & Kab. Serang (Banten)</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-caret-right text-yellow-300 text-xs"></i> Kota & Kab. Tangerang (Banten)</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-blue-600/60 border border-blue-400/50 rounded-2xl p-4">
+                            <div class="font-heading font-bold text-yellow-300 text-sm mb-2 flex items-center gap-2">
+                                <i class="fa-solid fa-globe"></i> Bimbel Online Interaktif
+                            </div>
+                            <ul class="space-y-1.5 text-sm text-blue-50">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-caret-right text-yellow-300 text-xs"></i> Seluruh Wilayah Indonesia</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-caret-right text-yellow-300 text-xs"></i> Siswa Indonesia di Luar Negeri</li>
+                            </ul>
+                        </div>
+
+                        <div class="pt-1">
+                            <div class="font-heading font-bold text-white text-sm mb-2">Kurikulum Didukung:</div>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full">Kurikulum Merdeka</span>
+                                <span class="bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full">Cambridge</span>
+                                <span class="bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full">IB Curriculum</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="pt-6 text-center text-xs sm:text-sm text-blue-100 font-medium">
+                <p>&copy; 2026 Pintaria Course. Hak cipta dilindungi undang-undang.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Logic Controller: Smooth Tutor Carousel, Program & Testimoni -->
+    <script>
+        var dataTutor = [
+            {
+                nama: 'Kak Baim',
+                role: 'Lead Tutor',
+                badgeColor: 'bg-blue-600',
+                spesialisasi: 'Pengalaman 3+ Tahun • SD, SMP, SMA',
+                foto: 'https://lh3.googleusercontent.com/d/1Sp5Kkozw1dmDaV2Fkd_bcrpURyA2Bq8O=w1000',
+                deskripsi: 'Terbiasa membimbing siswa dengan Kurikulum Nasional, Cambridge, dan IB. Fokus membangun fondasi logika matematika tanpa hafalan rumus berlebih dengan suasana belajar santai dan menyenangkan.',
+                tags: ['Kurikulum Nasional', 'Cambridge & IB', 'Math Logic', 'Jarimatika']
+            },
+            {
+                nama: 'Kak Zakiya',
+                role: 'Tutor Matematika',
+                badgeColor: 'bg-teal-600',
+                spesialisasi: 'Pengalaman 4+ Tahun • SD, SMP, SMA',
+                foto: 'https://lh3.googleusercontent.com/d/1ahG-N6tMCQZ-VSAOFvtG5KJ2DOL07_di=w1000',
+                deskripsi: 'Membimbing siswa memahami konsep matematika melalui penjelasan yang sederhana, bertahap, dan mudah dipahami. Mengutamakan pemahaman konsep serta latihan yang disesuaikan dengan kemampuan masing-masing siswa.',
+                tags: ['Jarimatika', 'Dasar Konsep', 'Trik Cepat', 'Ramah Anak']
+            },
+            {
+                nama: 'Kak Annisa',
+                role: 'Tutor Matematika',
+                badgeColor: 'bg-indigo-600',
+                spesialisasi: 'Pengalaman 5+ Tahun • SD & SMP',
+                foto: 'https://lh3.googleusercontent.com/d/1symKbxrpnsyu_01JM-fYdsJip0sZtdoH=w1000',
+                deskripsi: 'Membantu siswa memahami konsep dasar, meningkatkan nilai akademik, dan membangun rasa percaya diri saat belajar. Pendekatan disesuaikan dengan gaya belajar masing-masing anak.',
+                tags: ['Sabar', 'Komunikatif', 'Membuat Nyaman']
+            },
+            {
+                nama: 'Kak Susantini',
+                role: 'Tutor Matematika',
+                badgeColor: 'bg-purple-600',
+                spesialisasi: 'Pengalaman 1+ Tahun • SD, SMP, SMA',
+                foto: 'https://lh3.googleusercontent.com/d/1yz9rbSUokU5fc6wba-r4ux2vVs0K8hJr=w1000',
+                deskripsi: 'Fokus pada pemahaman konsep matematika dengan pembelajaran yang santai, sabar, dan interaktif.',
+                tags: ['Mathematical Concept', 'Fun & Interaktif']
+            }
+        ];
+
+        var activeTutorIndex = 0;
+
+        function renderTutorCarousel() {
+            var stage = document.getElementById('tutorCarouselStage');
+            var dotsContainer = document.getElementById('tutorDots');
+            if (!stage || !dotsContainer) return;
+
+            var html = '';
+            for (var i = 0; i < dataTutor.length; i++) {
+                var t = dataTutor[i];
+                var avatarHtml = t.foto
+                    ? '<img src="' + t.foto + '" alt="' + t.nama + '" class="w-full h-full object-cover object-top">'
+                    : '<i class="fa-solid fa-user-graduate"></i>';
+
+                var tagsHtml = '';
+                for (var j = 0; j < t.tags.length; j++) {
+                    tagsHtml += '<span class="text-xs bg-blue-50 text-blue-700 font-semibold px-2.5 py-1 rounded-lg">' + t.tags[j] + '</span>';
+                }
+
+                html += 
+                    '<div id="tutor-card-' + i + '" onclick="pilihTutorLangsung(' + i + ')" class="tutor-slide-item tutor-card-transition snap-center shrink-0 w-[82%] sm:w-[60%] md:w-[360px] bg-white rounded-[2.2rem] p-6 md:p-7 text-center relative overflow-hidden cursor-pointer select-none border-4 border-blue-100 shadow-md scale-90 opacity-70">' +
+                        '<div id="tutor-bar-' + i + '" class="absolute top-0 left-0 w-full h-2 bg-blue-300 transition-colors"></div>' +
+                        '<div>' +
+                            '<div id="tutor-avatar-' + i + '" class="w-24 h-24 md:w-28 md:h-28 mx-auto bg-blue-100 rounded-full border-4 border-white shadow-md overflow-hidden mb-4 flex items-center justify-center text-blue-500 text-4xl transition-all">' + avatarHtml + '</div>' +
+                            '<span class="inline-block ' + t.badgeColor + ' text-white text-xs font-bold px-3.5 py-1 rounded-full mb-2">' + t.role + '</span>' +
+                            '<h3 class="font-heading text-xl md:text-2xl font-extrabold text-blue-900">' + t.nama + '</h3>' +
+                            '<p class="text-xs font-semibold text-blue-600 mb-3">' + t.spesialisasi + '</p>' +
+                            '<p class="text-sm text-gray-600 leading-relaxed mb-4">' + t.deskripsi + '</p>' +
+                        '</div>' +
+                        '<div class="flex flex-wrap justify-center gap-1.5 pt-3 border-t border-gray-100">' + tagsHtml + '</div>' +
+                    '</div>';
+            }
+            stage.innerHTML = html;
+
+            var dotsHtml = '';
+            for (var d = 0; d < dataTutor.length; d++) {
+                dotsHtml += '<button type="button" id="tutor-dot-' + d + '" onclick="pilihTutorLangsung(' + d + ')" aria-label="Pilih Tutor ' + (d + 1) + '" class="w-3 h-3 rounded-full bg-blue-200 transition-all"></button>';
+            }
+            dotsContainer.innerHTML = dotsHtml;
+
+            applyTutorVisualFocus(0);
+        }
+
+        function applyTutorVisualFocus(centerIdx) {
+            activeTutorIndex = centerIdx;
+            for (var i = 0; i < dataTutor.length; i++) {
+                var card = document.getElementById('tutor-card-' + i);
+                var bar = document.getElementById('tutor-bar-' + i);
+                var avatar = document.getElementById('tutor-avatar-' + i);
+                var dot = document.getElementById('tutor-dot-' + i);
+                if (!card) continue;
+
+                if (i === centerIdx) {
+                    card.className = 'tutor-slide-item tutor-card-transition snap-center shrink-0 w-[82%] sm:w-[60%] md:w-[360px] bg-white rounded-[2.2rem] p-6 md:p-7 text-center relative overflow-hidden cursor-default select-none border-4 border-yellow-400 shadow-2xl scale-100 md:scale-105 opacity-100 z-20';
+                    if (bar) bar.className = 'absolute top-0 left-0 w-full h-2.5 bg-yellow-400 transition-colors';
+                    if (avatar) avatar.className = 'w-28 h-28 md:w-32 md:h-32 mx-auto bg-yellow-400 rounded-full border-4 border-blue-100 shadow-lg overflow-hidden mb-4 flex items-center justify-center text-blue-600 text-5xl transition-all';
+                    if (dot) dot.className = 'w-8 h-3 rounded-full bg-yellow-400 border border-blue-900/20 transition-all';
+                } else {
+                    card.className = 'tutor-slide-item tutor-card-transition snap-center shrink-0 w-[82%] sm:w-[60%] md:w-[360px] bg-white/85 hover:bg-white rounded-[2.2rem] p-6 md:p-7 text-center relative overflow-hidden cursor-pointer select-none border-4 border-blue-100 shadow-md scale-90 opacity-70 hover:opacity-95 z-10';
+                    if (bar) bar.className = 'absolute top-0 left-0 w-full h-2 bg-blue-300 transition-colors';
+                    if (avatar) avatar.className = 'w-24 h-24 md:w-28 md:h-28 mx-auto bg-blue-100 rounded-full border-4 border-white shadow-md overflow-hidden mb-4 flex items-center justify-center text-blue-500 text-4xl transition-all';
+                    if (dot) dot.className = 'w-3 h-3 rounded-full bg-blue-200 hover:bg-blue-400 transition-all';
+                }
+            }
+        }
+
+        function updateTutorFocus() {
+            var stage = document.getElementById('tutorCarouselStage');
+            if (!stage) return;
+            var stageCenter = stage.scrollLeft + (stage.clientWidth / 2);
+            var closestIdx = 0;
+            var minDistance = Infinity;
+
+            for (var i = 0; i < dataTutor.length; i++) {
+                var card = document.getElementById('tutor-card-' + i);
+                if (!card) continue;
+                var cardCenter = card.offsetLeft + (card.offsetWidth / 2);
+                var dist = Math.abs(stageCenter - cardCenter);
+                if (dist < minDistance) {
+                    minDistance = dist;
+                    closestIdx = i;
+                }
+            }
+            if (closestIdx !== activeTutorIndex) {
+                applyTutorVisualFocus(closestIdx);
+            }
+        }
+
+        function pilihTutorLangsung(index) {
+            var stage = document.getElementById('tutorCarouselStage');
+            var card = document.getElementById('tutor-card-' + index);
+            if (!stage || !card) return;
+            var targetScroll = card.offsetLeft - (stage.clientWidth / 2) + (card.offsetWidth / 2);
+            stage.scrollTo({ left: targetScroll, behavior: 'smooth' });
+            applyTutorVisualFocus(index);
+        }
+
+        function geserTutor(arah) {
+            var total = dataTutor.length;
+            var nextIdx = (activeTutorIndex + arah + total) % total;
+            pilihTutorLangsung(nextIdx);
+        }
+
+        var dataProgram = {
+            'SD': {
+                badgeColor: 'bg-blue-600',
+                online: {
+                    hargaPrivat: 'Privat: Mulai Rp 50.000 / sesi',
+                    hargaGrup: 'Grup: Mulai Rp 25.000 / sesi',
+                    target: 'Membangun fondasi berhitung cepat (Jarimatika), logika dasar matematika, dan pendampingan PR & ulangan sekolah.',
+                    detailPaket: [
+                        '<strong>Kelas Privat (1-on-1):</strong> Mulai <strong>Rp 50.000 / sesi</strong> (durasi 60 menit).',
+                        '<strong>Kelas Grup:</strong> Mulai <strong>Rp 25.000 / sesi</strong> (durasi 90 menit).',
+                        'Tersedia pilihan paket 1 Sesi (Trial), 4 Sesi, 8 Sesi, dan 12 Sesi.'
+                    ],
+                    metode: [
+                        'Tatap muka interaktif via Zoom Meeting bersama Tutor Pintaria.',
+                        'Papan tulis digital visual (Canva Whiteboard) & kuis interaktif ramah anak.'
+                    ],
+                    fasilitas: [
+                        'Rekaman sesi belajar via link YouTube khusus (bisa ditonton ulang kapan saja).',
+                        'Modul latihan soal PDF & catatan coretan papan tulis tiap sesi.',
+                        'Konsultasi PR via WhatsApp & laporan perkembangan (report) rutin.'
+                    ]
+                },
+                offline: {
+                    hargaPrivat: 'Privat: Mulai Rp 60.000 / sesi',
+                    hargaGrup: 'Grup: Mulai Rp 30.000 / sesi',
+                    target: 'Pendampingan intensif langsung di rumah siswa agar lebih fokus, disiplin, dan bebas gangguan gadget.',
+                    detailPaket: [
+                        '<strong>Kelas Privat (1-on-1):</strong> Mulai <strong>Rp 60.000 / sesi</strong> (durasi 60 menit).',
+                        '<strong>Kelas Grup:</strong> Mulai <strong>Rp 30.000 / sesi</strong> (durasi 90 menit).',
+                        'Tersedia pilihan paket 1 Sesi (Trial), 4 Sesi, 8 Sesi, dan 12 Sesi.'
+                    ],
+                    metode: [
+                        'Tatap muka langsung di rumah dengan pendekatan sabar & fun.',
+                        'Latihan soal bertahap dengan trik berhitung cepat & praktis.'
+                    ],
+                    fasilitas: [
+                        'Lembar kerja & latihan soal terstruktur sesuai materi sekolah.',
+                        'Bimbingan khusus persiapan ulangan harian & PTS/PAS.',
+                        'Evaluasi progres langsung dengan orang tua setelah sesi belajar.'
+                    ]
+                }
+            },
+            'SMP': {
+                badgeColor: 'bg-teal-600',
+                online: {
+                    hargaPrivat: 'Privat: Mulai Rp 60.000 / sesi',
+                    hargaGrup: 'Grup: Mulai Rp 35.000 / sesi',
+                    target: 'Menguasai konsep Aljabar, Geometri, Aritmatika Sosial, hingga persiapan Ujian Akhir & masuk SMA favorit.',
+                    detailPaket: [
+                        '<strong>Kelas Privat (1-on-1):</strong> Mulai <strong>Rp 60.000 / sesi</strong> (durasi 60 menit).',
+                        '<strong>Kelas Grup:</strong> Mulai <strong>Rp 35.000 / sesi</strong> (durasi 90 menit).',
+                        'Tersedia pilihan paket 1 Sesi (Trial), 4 Sesi, 8 Sesi, dan 12 Sesi.'
+                    ],
+                    metode: [
+                        'Bedah konsep dari akar logikanya (bukan sekadar menghafal rumus).',
+                        'Menggunakan modul HTML interaktif, grafik visual & Zoom Meeting.'
+                    ],
+                    fasilitas: [
+                        'Rekaman video pembahasan kelas via YouTube (Unlisted) untuk belajar mandiri.',
+                        'Bank soal Kurikulum Merdeka & Cambridge + ringkasan materi PDF.',
+                        'Tanya jawab PR/tugas via WhatsApp & report evaluasi berkala.'
+                    ]
+                },
+                offline: {
+                    hargaPrivat: 'Privat: Mulai Rp 70.000 / sesi',
+                    hargaGrup: 'Grup: Mulai Rp 40.000 / sesi',
+                    target: 'Bimbingan tatap muka mendalam untuk mengejar ketertinggalan materi sekolah atau akselerasi nilai rapor.',
+                    detailPaket: [
+                        '<strong>Kelas Privat (1-on-1):</strong> Mulai <strong>Rp 70.000 / sesi</strong> (durasi 60 menit).',
+                        '<strong>Kelas Grup:</strong> Mulai <strong>Rp 40.000 / sesi</strong> (durasi 90 menit).',
+                        'Tersedia pilihan paket 1 Sesi (Trial), 4 Sesi, 8 Sesi, dan 12 Sesi.'
+                    ],
+                    metode: [
+                        'Pendampingan langsung di rumah dengan latihan soal terarah.',
+                        'Koreksi langkah pengerjaan siswa secara langsung (real-time).'
+                    ],
+                    fasilitas: [
+                        'Latihan soal ulangan harian, PTS/PAS, dan ujian sekolah.',
+                        'Konsultasi kesulitan belajar & strategi manajemen waktu ujian.',
+                        'Laporan perkembangan belajar berkala kepada orang tua.'
+                    ]
+                }
+            },
+            'SMA': {
+                badgeColor: 'bg-indigo-600',
+                online: {
+                    hargaPrivat: 'Privat: Mulai Rp 80.000 / sesi',
+                    hargaGrup: 'Grup: Mulai Rp 45.000 / sesi',
+                    target: 'Pendalaman Matematika Wajib & Peminatan (Fungsi Kuadrat, Trigonometri, Kalkulus, Logaritma) serta persiapan SNBT.',
+                    detailPaket: [
+                        '<strong>Kelas Privat (1-on-1):</strong> Mulai <strong>Rp 80.000 / sesi</strong> (durasi 60 menit).',
+                        '<strong>Kelas Grup:</strong> Mulai <strong>Rp 45.000 / sesi</strong> (durasi 90 menit).',
+                        'Tersedia pilihan paket 1 Sesi (Trial), 4 Sesi, 8 Sesi, dan 12 Sesi.'
+                    ],
+                    metode: [
+                        'Visualisasi grafik fungsi interaktif & pembuktian konsep logis.',
+                        'Bedah tipe soal HOTS & strategi pengerjaan cepat untuk ujian/SNBT.'
+                    ],
+                    fasilitas: [
+                        'Rekaman sesi belajar via link YouTube khusus (sangat membantu untuk review ujian).',
+                        'Modul interaktif & file PDF pembahasan lengkap langkah demi langkah.',
+                        'Konsultasi PR/tugas via WhatsApp & report evaluasi transparan.'
+                    ]
+                },
+                offline: {
+                    hargaPrivat: 'Privat: Mulai Rp 90.000 / sesi',
+                    hargaGrup: 'Grup: Mulai Rp 50.000 / sesi',
+                    target: 'Fokus maksimal persiapan ulangan harian, PTS/PAS, ujian sekolah, dan pemantapan materi kuantitatif SNBT.',
+                    detailPaket: [
+                        '<strong>Kelas Privat (1-on-1):</strong> Mulai <strong>Rp 90.000 / sesi</strong> (durasi 60 menit).',
+                        '<strong>Kelas Grup:</strong> Mulai <strong>Rp 50.000 / sesi</strong> (durasi 90 menit).',
+                        'Tersedia pilihan paket 1 Sesi (Trial), 4 Sesi, 8 Sesi, dan 12 Sesi.'
+                    ],
+                    metode: [
+                        'Diskusi tatap muka intensif & drilling soal ujian tahun sebelumnya.',
+                        'Pemetaan dan evaluasi kelemahan materi per bab secara spesifik.'
+                    ],
+                    fasilitas: [
+                        'Handout latihan soal terfokus sesuai kisi-kisi sekolah.',
+                        'Bimbingan intensif menjelang ulangan maupun ujian akhir.',
+                        'Laporan hasil evaluasi belajar langsung kepada orang tua.'
+                    ]
+                }
+            }
+        };
+
+        function formatList(items) {
+            var html = '<ul class="space-y-2">';
+            for (var i = 0; i < items.length; i++) {
+                html += '<li class="flex items-start gap-2.5"><i class="fa-solid fa-circle-check text-teal-600 mt-1 shrink-0"></i><span>' + items[i] + '</span></li>';
+            }
+            html += '</ul>';
+            return html;
+        }
+
+        function pilihJenjang(jenjang) {
+            var buttons = document.querySelectorAll('.jenjang-btn');
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove('bg-yellow-400', 'text-blue-900', 'shadow-sm');
+                buttons[i].classList.add('text-gray-600');
+            }
+            var activeBtn = document.getElementById('tab-' + jenjang);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-yellow-400', 'text-blue-900', 'shadow-sm');
+                activeBtn.classList.remove('text-gray-600');
+            }
+
+            var info = dataProgram[jenjang];
+            var container = document.getElementById('programCardsContainer');
+            if (!container || !info) return;
+            
+            container.innerHTML = 
+                '<div class="min-w-full md:min-w-0 snap-center bg-white rounded-[2rem] shadow-xl border-2 border-blue-100 p-6 md:p-8 relative overflow-hidden flex flex-col justify-between md:hover:-translate-y-1 transition-transform">' +
+                    '<div>' +
+                        '<div class="flex justify-between items-start gap-3 mb-5">' +
+                            '<div class="flex items-start gap-3">' +
+                                '<div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-2xl shrink-0 mt-0.5">' +
+                                    '<i class="fa-solid fa-laptop-house"></i>' +
+                                '</div>' +
+                                '<div>' +
+                                    '<h3 class="font-heading text-xl md:text-2xl font-extrabold text-blue-900">Bimbel Online</h3>' +
+                                    '<div class="flex flex-col gap-1 mt-1.5">' +
+                                        '<span class="inline-block w-fit text-xs font-bold text-blue-800 bg-blue-50 border border-blue-100 px-3 py-0.5 rounded-full"><i class="fa-solid fa-user mr-1 text-blue-500"></i> ' + info.online.hargaPrivat + '</span>' +
+                                        '<span class="inline-block w-fit text-xs font-bold text-teal-800 bg-teal-50 border border-teal-100 px-3 py-0.5 rounded-full"><i class="fa-solid fa-users mr-1 text-teal-500"></i> ' + info.online.hargaGrup + '</span>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</div>' +
+                            '<span class="' + info.badgeColor + ' text-white text-xs md:text-sm font-bold px-3.5 py-1.5 rounded-xl shadow-sm shrink-0">' + jenjang + '</span>' +
+                        '</div>' +
+                        '<div class="space-y-3 mb-6 text-sm md:text-base text-gray-600">' +
+                            '<div class="flex items-start gap-3">' +
+                                '<i class="fa-solid fa-bullseye text-blue-500 mt-1"></i>' +
+                                '<p><strong>Tujuan Program:</strong> ' + info.online.target + '</p>' +
+                            '</div>' +
+                            '<div class="flex items-start gap-3">' +
+                                '<i class="fa-brands fa-youtube text-red-500 mt-1"></i>' +
+                                '<p><strong>Bonus Rekaman YouTube</strong> + Zoom & Papan Tulis Interaktif</p>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="space-y-3 mb-7">' +
+                            '<details open class="group bg-teal-50/70 hover:bg-teal-50 rounded-2xl border border-teal-100 overflow-hidden">' +
+                                '<summary class="px-5 py-3.5 font-heading font-bold text-base text-blue-900 flex justify-between items-center cursor-pointer">' +
+                                    '<span>Detail Paket (Privat & Grup)</span>' +
+                                    '<i class="fa-solid fa-chevron-right text-sm text-teal-600 group-open:rotate-90 transition-transform"></i>' +
+                                '</summary>' +
+                                '<div class="px-5 pb-4 pt-2 text-sm text-gray-700 leading-relaxed border-t border-teal-100/70">' + formatList(info.online.detailPaket) + '</div>' +
+                            '</details>' +
+                            '<details class="group bg-teal-50/70 hover:bg-teal-50 rounded-2xl border border-teal-100 overflow-hidden">' +
+                                '<summary class="px-5 py-3.5 font-heading font-bold text-base text-blue-900 flex justify-between items-center cursor-pointer">' +
+                                    '<span>Metode Belajar</span>' +
+                                    '<i class="fa-solid fa-chevron-right text-sm text-teal-600 group-open:rotate-90 transition-transform"></i>' +
+                                '</summary>' +
+                                '<div class="px-5 pb-4 pt-2 text-sm text-gray-700 leading-relaxed border-t border-teal-100/70">' + formatList(info.online.metode) + '</div>' +
+                            '</details>' +
+                            '<details class="group bg-teal-50/70 hover:bg-teal-50 rounded-2xl border border-teal-100 overflow-hidden">' +
+                                '<summary class="px-5 py-3.5 font-heading font-bold text-base text-blue-900 flex justify-between items-center cursor-pointer">' +
+                                    '<span>Fasilitas Belajar</span>' +
+                                    '<i class="fa-solid fa-chevron-right text-sm text-teal-600 group-open:rotate-90 transition-transform"></i>' +
+                                '</summary>' +
+                                '<div class="px-5 pb-4 pt-2 text-sm text-gray-700 leading-relaxed border-t border-teal-100/70">' + formatList(info.online.fasilitas) + '</div>' +
+                            '</details>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="text-center">' +
+                        '<a href="#daftar" onclick="pilihOtomatis(\'' + jenjang + '\', \'Privat Online\')" class="block w-full bg-yellow-400 hover:bg-yellow-300 text-blue-900 font-bold text-base py-4 rounded-2xl shadow-md transition-all">Daftar Kelas Online</a>' +
+                        '<a href="https://wa.me/6285196404990?text=Halo%20Kak%20Baim!%20Saya%20mau%20tanya%20program%20Bimbel%20Online%20jenjang%20' + jenjang + '." target="_blank" class="inline-block mt-3 text-sm font-bold text-teal-700 hover:underline"><i class="fa-brands fa-whatsapp mr-1"></i> Konsultasi Paket Online</a>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="min-w-full md:min-w-0 snap-center bg-white rounded-[2rem] shadow-xl border-2 border-blue-100 p-6 md:p-8 relative overflow-hidden flex flex-col justify-between md:hover:-translate-y-1 transition-transform">' +
+                    '<div>' +
+                        '<div class="flex justify-between items-start gap-3 mb-5">' +
+                            '<div class="flex items-start gap-3">' +
+                                '<div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-2xl shrink-0 mt-0.5">' +
+                                    '<i class="fa-solid fa-house-user"></i>' +
+                                '</div>' +
+                                '<div>' +
+                                    '<h3 class="font-heading text-xl md:text-2xl font-extrabold text-blue-900">Bimbel Offline</h3>' +
+                                    '<div class="flex flex-col gap-1 mt-1.5">' +
+                                        '<span class="inline-block w-fit text-xs font-bold text-amber-900 bg-amber-50 border border-amber-100 px-3 py-0.5 rounded-full"><i class="fa-solid fa-user mr-1 text-amber-600"></i> ' + info.offline.hargaPrivat + '</span>' +
+                                        '<span class="inline-block w-fit text-xs font-bold text-teal-800 bg-teal-50 border border-teal-100 px-3 py-0.5 rounded-full"><i class="fa-solid fa-users mr-1 text-teal-500"></i> ' + info.offline.hargaGrup + '</span>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</div>' +
+                            '<span class="' + info.badgeColor + ' text-white text-xs md:text-sm font-bold px-3.5 py-1.5 rounded-xl shadow-sm shrink-0">' + jenjang + '</span>' +
+                        '</div>' +
+                        '<div class="space-y-3 mb-6 text-sm md:text-base text-gray-600">' +
+                            '<div class="flex items-start gap-3">' +
+                                '<i class="fa-solid fa-bullseye text-amber-500 mt-1"></i>' +
+                                '<p><strong>Tujuan Program:</strong> ' + info.offline.target + '</p>' +
+                            '</div>' +
+                            '<div class="flex items-start gap-3">' +
+                                '<i class="fa-solid fa-person-chalkboard text-green-500 mt-1"></i>' +
+                                '<p>Tutor datang langsung ke rumah (Tersedia Privat & Grup)</p>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="space-y-3 mb-7">' +
+                            '<details open class="group bg-teal-50/70 hover:bg-teal-50 rounded-2xl border border-teal-100 overflow-hidden">' +
+                                '<summary class="px-5 py-3.5 font-heading font-bold text-base text-blue-900 flex justify-between items-center cursor-pointer">' +
+                                    '<span>Detail Paket (Privat & Grup)</span>' +
+                                    '<i class="fa-solid fa-chevron-right text-sm text-teal-600 group-open:rotate-90 transition-transform"></i>' +
+                                '</summary>' +
+                                '<div class="px-5 pb-4 pt-2 text-sm text-gray-700 leading-relaxed border-t border-teal-100/70">' + formatList(info.offline.detailPaket) + '</div>' +
+                            '</details>' +
+                            '<details class="group bg-teal-50/70 hover:bg-teal-50 rounded-2xl border border-teal-100 overflow-hidden">' +
+                                '<summary class="px-5 py-3.5 font-heading font-bold text-base text-blue-900 flex justify-between items-center cursor-pointer">' +
+                                    '<span>Metode Belajar</span>' +
+                                    '<i class="fa-solid fa-chevron-right text-sm text-teal-600 group-open:rotate-90 transition-transform"></i>' +
+                                '</summary>' +
+                                '<div class="px-5 pb-4 pt-2 text-sm text-gray-700 leading-relaxed border-t border-teal-100/70">' + formatList(info.offline.metode) + '</div>' +
+                            '</details>' +
+                            '<details class="group bg-teal-50/70 hover:bg-teal-50 rounded-2xl border border-teal-100 overflow-hidden">' +
+                                '<summary class="px-5 py-3.5 font-heading font-bold text-base text-blue-900 flex justify-between items-center cursor-pointer">' +
+                                    '<span>Fasilitas Belajar</span>' +
+                                    '<i class="fa-solid fa-chevron-right text-sm text-teal-600 group-open:rotate-90 transition-transform"></i>' +
+                                '</summary>' +
+                                '<div class="px-5 pb-4 pt-2 text-sm text-gray-700 leading-relaxed border-t border-teal-100/70">' + formatList(info.offline.fasilitas) + '</div>' +
+                            '</details>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="text-center">' +
+                        '<a href="#daftar" onclick="pilihOtomatis(\'' + jenjang + '\', \'Privat Offline\')" class="block w-full bg-yellow-400 hover:bg-yellow-300 text-blue-900 font-bold text-base py-4 rounded-2xl shadow-md transition-all">Daftar Kelas Offline</a>' +
+                        '<a href="https://wa.me/6285196404990?text=Halo%20Kak%20Baim!%20Saya%20mau%20tanya%20program%20Bimbel%20Offline%20jenjang%20' + jenjang + '." target="_blank" class="inline-block mt-3 text-sm font-bold text-teal-700 hover:underline"><i class="fa-brands fa-whatsapp mr-1"></i> Cek Jangkauan Area Offline</a>' +
+                    '</div>' +
+                '</div>';
+
+            keSlideProgram(0);
+        }
+
+        var currentProgramSlide = 0;
+
+        function keSlideProgram(index) {
+            var container = document.getElementById('programCardsContainer');
+            if (!container) return;
+            currentProgramSlide = index;
+            var slideWidth = container.clientWidth;
+            container.scrollTo({ left: slideWidth * index, behavior: 'smooth' });
+            syncProgramIndicators(index);
+        }
+
+        function geserProgram(arah) {
+            var nextSlide = (currentProgramSlide + arah + 2) % 2;
+            keSlideProgram(nextSlide);
+        }
+
+        function updateProgramDots() {
+            var container = document.getElementById('programCardsContainer');
+            if (!container || container.clientWidth === 0) return;
+            var index = Math.round(container.scrollLeft / container.clientWidth);
+            if (index !== currentProgramSlide) {
+                currentProgramSlide = index;
+                syncProgramIndicators(index);
+            }
+        }
+
+        function syncProgramIndicators(index) {
+            var dot0 = document.getElementById('prog-dot-0');
+            var dot1 = document.getElementById('prog-dot-1');
+            var label = document.getElementById('programSlideLabel');
+            if (dot0 && dot1) {
+                if (index === 0) {
+                    dot0.className = 'w-8 h-2.5 rounded-full bg-yellow-400 border border-blue-900/20 transition-all';
+                    dot1.className = 'w-2.5 h-2.5 rounded-full bg-blue-200 transition-all';
+                    if (label) label.textContent = 'Slide 1/2: Bimbel Online';
+                } else {
+                    dot0.className = 'w-2.5 h-2.5 rounded-full bg-blue-200 transition-all';
+                    dot1.className = 'w-8 h-2.5 rounded-full bg-yellow-400 border border-blue-900/20 transition-all';
+                    if (label) label.textContent = 'Slide 2/2: Bimbel Offline';
+                }
+            }
+        }
+
+        function pilihOtomatis(jenjang, paket) {
+            var inputKelas = document.getElementById('kelas');
+            var selectPaket = document.getElementById('paket');
+            if (inputKelas && !inputKelas.value) {
+                inputKelas.value = jenjang + ' ';
+            }
+            if (selectPaket) {
+                selectPaket.value = paket;
+            }
+        }
+
+        function pilihLayananFooter(catatanKelas, paket) {
+            var inputKelas = document.getElementById('kelas');
+            var selectPaket = document.getElementById('paket');
+            var inputNama = document.getElementById('nama');
+            if (inputKelas && catatanKelas) {
+                inputKelas.value = catatanKelas;
+            }
+            if (selectPaket && paket) {
+                selectPaket.value = paket;
+            }
+            setTimeout(function() {
+                if (inputNama) inputNama.focus();
+            }, 500);
+        }
+
+        var dummyTestimoni = [
+            { nama: "Ayah Reylan", sekolah: "Lomba Math • SD Islam Al Azhar", ulasan: "Terima kasih kak, Reylan banyak sekali peningkatannya. Kemarin di IKMC Reylan dapat Silver Medal di matematika, padahal awalnya dia anti banget dengan pelajaran matematika.", gambar: "https://lh3.googleusercontent.com/d/1D8Wfrh4JdOUx7SiKHXpva1jiwhS-1wmh=w1000" },
+            { nama: "Bunda Fatih", sekolah: "Mengembangkan Logika", ulasan: "Terima kasih banyak Mr. Baim. Saya sangat apresiasi kepada Mr. Baim bisa membuat Fatih nyaman dan happy untuk belajar matematika.", gambar: "https://lh3.googleusercontent.com/d/1-jxwSNP_zrptjQed7JnnWDDfFwru0KrV=w1000" },
+            { nama: "Bunda Alya", sekolah: "Persiapan TKA", ulasan: "Alhamdulillah... wah lengkap ya ternyata materinya sama Kak Baim, terima kasih Kak Baim.", gambar: "https://lh3.googleusercontent.com/d/1HdAl0d4401f6uJdOvaLZ-KD8lescKjC-=w1000" },
+            { nama: "Bunda Ihsan", sekolah: "Meningkatkan Nilai", ulasan: "Makasih juga Kak Baim, saya sempat pesimis Ihsan kayaknya tidak tertarik sama lesnya, tapi memang akhir-akhir ini sudah mulai bersemangat dia ikut lesnya.", gambar: "https://lh3.googleusercontent.com/d/1DBqe0k_FDrfNAFSSzpQ5biHk07LqVR18=w1000" },
+            { nama: "Bunda Jonathan", sekolah: "Meningkatkan Nilai • SMP Kelas 8", ulasan: "Terima kasih Mister untuk bimbingan dan perhatian terhadap Jonathan serta kesabarannya dalam mendidik anak kami. Kemarin sudah terima raport dengan nilai matematika yang memuaskan, dari 78 semester kemarin naik jadi 80.", gambar: "https://lh3.googleusercontent.com/d/1_67amhqZkaoAHzI5l2dR8Zn2eP-Oo81h=w1000" },
+            { nama: "Bunda Shauniqa", sekolah: "Olimpiade Math", ulasan: "Alhamdulillah Miss Zakia, Shauniqa dapat ranking 7 padahal lawannya kakak kelas 4. Hasilnya sudah bagus banget!", gambar: "https://lh3.googleusercontent.com/d/12bnXo104-g60DD5vba5SywcEXPa5rETn=w1000" }
+        ];
+
+        var activeTestimoniIdx = 0;
+        var totalTestimoniCount = 0;
+
+        function renderTestimoni(data) {
+            var container = document.getElementById('testimoniContainer');
+            var dotsContainer = document.getElementById('testimoniDots');
+            if (!container) return;
+            container.innerHTML = '';
+            var list = (data && data.length > 0) ? data : dummyTestimoni;
+            totalTestimoniCount = list.length;
+
+            for (var i = 0; i < list.length; i++) {
+                var item = list[i];
+                var imgTag = item.gambar 
+                    ? '<div class="mb-5 rounded-2xl overflow-hidden border-2 border-blue-100 shadow-sm bg-blue-50"><img src="' + item.gambar + '" alt="Testimoni ' + item.nama + '" loading="lazy" class="w-full h-auto block"></div>' 
+                    : '';
+                var sekolahTag = item.sekolah 
+                    ? '<div class="text-xs font-semibold text-blue-600 mb-1">' + item.sekolah + '</div>' 
+                    : '';
+
+                container.innerHTML += 
+                    '<div id="testi-card-' + i + '" class="snap-center shrink-0 w-[88%] sm:w-[48%] lg:w-[32%] bg-white p-6 md:p-7 rounded-[2rem] shadow-xl relative mt-4 flex flex-col justify-between">' +
+                        '<div class="absolute -top-5 left-7 bg-yellow-400 w-11 h-11 rounded-full flex items-center justify-center text-blue-900 text-xl shadow-lg">' +
+                            '<i class="fa-solid fa-quote-left"></i>' +
+                        '</div>' +
+                        '<div class="mt-2">' +
+                            imgTag +
+                            '<p class="text-gray-600 text-sm md:text-base font-medium leading-relaxed mb-5">"' + item.ulasan + '"</p>' +
+                        '</div>' +
+                        '<div class="flex items-center gap-3.5 border-t border-gray-100 pt-4">' +
+                            '<div class="w-11 h-11 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-lg shrink-0">' +
+                                '<i class="fa-solid fa-user"></i>' +
+                            '</div>' +
+                            '<div>' +
+                                '<div class="font-heading font-bold text-blue-900 text-base">' + item.nama + '</div>' +
+                                sekolahTag +
+                                '<div class="text-xs text-yellow-500 flex gap-1">' +
+                                    '<i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
+            }
+
+            if (dotsContainer) {
+                var dotsHtml = '';
+                for (var d = 0; d < list.length; d++) {
+                    var activeDot = (d === 0)
+                        ? 'w-8 h-2.5 rounded-full bg-yellow-400 transition-all'
+                        : 'w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white transition-all';
+                    dotsHtml += '<button type="button" id="testi-dot-' + d + '" onclick="keSlideTestimoni(' + d + ')" aria-label="Testimoni ' + (d + 1) + '" class="' + activeDot + '"></button>';
+                }
+                dotsContainer.innerHTML = dotsHtml;
+            }
+        }
+
+        function keSlideTestimoni(index) {
+            var container = document.getElementById('testimoniContainer');
+            var card = document.getElementById('testi-card-' + index);
+            if (!container || !card) return;
+            activeTestimoniIdx = index;
+            container.scrollTo({ left: card.offsetLeft - 16, behavior: 'smooth' });
+            syncTestimoniDots(index);
+        }
+
+        function geserTestimoni(arah) {
+            if (totalTestimoniCount === 0) return;
+            var nextIdx = (activeTestimoniIdx + arah + totalTestimoniCount) % totalTestimoniCount;
+            keSlideTestimoni(nextIdx);
+        }
+
+        function updateTestimoniDots() {
+            var container = document.getElementById('testimoniContainer');
+            if (!container || totalTestimoniCount === 0) return;
+            var closestIdx = 0;
+            var minDiff = Infinity;
+            for (var i = 0; i < totalTestimoniCount; i++) {
+                var card = document.getElementById('testi-card-' + i);
+                if (!card) continue;
+                var diff = Math.abs(container.scrollLeft - card.offsetLeft);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    closestIdx = i;
+                }
+            }
+            if (closestIdx !== activeTestimoniIdx) {
+                activeTestimoniIdx = closestIdx;
+                syncTestimoniDots(closestIdx);
+            }
+        }
+
+        function syncTestimoniDots(index) {
+            for (var i = 0; i < totalTestimoniCount; i++) {
+                var dot = document.getElementById('testi-dot-' + i);
+                if (!dot) continue;
+                dot.className = (i === index)
+                    ? 'w-8 h-2.5 rounded-full bg-yellow-400 transition-all'
+                    : 'w-2.5 h-2.5 rounded-full bg-white/40 hover:bg-white transition-all';
+            }
+        }
+
+        renderTutorCarousel();
+        pilihJenjang('SD');
+        renderTestimoni(dummyTestimoni);
+
+        function submitForm(e) {
+            e.preventDefault();
+            var btn = document.getElementById('btnSubmit');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengarahkan ke WhatsApp...';
+            btn.disabled = true;
+
+            var formData = {
+                nama: document.getElementById('nama').value,
+                kelas: document.getElementById('kelas').value,
+                paket: document.getElementById('paket').value,
+                nowa: document.getElementById('nowa').value
+            };
+
+            var textWA = 'Halo Kak Baim (Pintaria Course)!%0ASaya tertarik mendaftar.%0A%0ANama: ' + encodeURIComponent(formData.nama) + '%0AKelas: ' + encodeURIComponent(formData.kelas) + '%0APaket: ' + encodeURIComponent(formData.paket) + '%0ANo. WA: ' + encodeURIComponent(formData.nowa) + '%0A%0AMohon infonya lebih lanjut ya Kak.';
+
+            document.getElementById('submitMsg').classList.remove('hidden');
+            setTimeout(function() {
+                btn.innerHTML = 'Kirim & Hubungi Tutor <i class="fa-solid fa-paper-plane"></i>';
+                btn.disabled = false;
+                window.location.href = 'https://wa.me/6285196404990?text=' + textWA;
+            }, 600);
+        }
+    </script>
+
+    <!-- Vercel Web Analytics -->
     <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
