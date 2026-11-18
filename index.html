@@ -6,20 +6,61 @@
     <title>Pintaria Course - Bimbel Matematika</title>
     <link id="dynamicFavicon" rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1Red23JZ7zN3yFFDQ5aVISnPvdFMLUduj=w800">
     <style>
-        html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #ffffff; }
+        html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
         iframe {
             width: 100%;
             height: 100dvh;
             border: none;
             display: block;
         }
+        .loader {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            color: #1e3a8a;
+            text-align: center;
+            padding: 24px;
+            z-index: 10;
+        }
+        .btn-fallback {
+            margin-top: 16px;
+            padding: 12px 24px;
+            background: #2563eb;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
-    <iframe src="https://script.google.com/macros/s/AKfycbzUUtyn-cqUvAdNw3bT9yZeZT4yJ1G9IzbhDDbJCjvrG7NkkKHiUOzRTxisb7FNg5CrhA/exec" allow="clipboard-write"></iframe>
+    <div id="fallbackBox" class="loader" style="display: none;">
+        <p style="font-weight: 700; font-size: 18px; margin: 0 0 8px;">Membuka Pintaria Course...</p>
+        <p style="font-size: 14px; color: #64748b; margin: 0;">Jika halaman belum muncul otomatis, ketuk tombol di bawah ini:</p>
+        <a id="directLink" class="btn-fallback" href="https://script.google.com/macros/s/AKfycbzUUtyn-cqUvAdNw3bT9yZeZT4yJ1G9IzbhDDbJCjvrG7NkkKHiUOzRTxisb7FNg5CrhA/exec">Buka Website Pintaria Course</a>
+    </div>
+
+    <iframe id="mainFrame" src="https://script.google.com/macros/s/AKfycbzUUtyn-cqUvAdNw3bT9yZeZT4yJ1G9IzbhDDbJCjvrG7NkkKHiUOzRTxisb7FNg5CrhA/exec" allow="clipboard-write"></iframe>
 
     <script>
         (function() {
+            var gasUrl = "https://script.google.com/macros/s/AKfycbzUUtyn-cqUvAdNw3bT9yZeZT4yJ1G9IzbhDDbJCjvrG7NkkKHiUOzRTxisb7FNg5CrhA/exec";
+            var ua = navigator.userAgent || navigator.vendor || window.opera;
+            // Deteksi In-App Browser (Instagram, TikTok, Facebook, Threads, Line)
+            var isInApp = /Instagram|FBAN|FBAV|BytedanceWebview|TikTok|Musical_ly|Barcelona|Line/i.test(ua);
+
+            if (isInApp) {
+                document.getElementById("mainFrame").style.display = "none";
+                document.getElementById("fallbackBox").style.display = "flex";
+                window.location.replace(gasUrl);
+            }
+
+            // Favicon Zoom
             var img = new Image();
             img.crossOrigin = "Anonymous";
             img.src = "https://lh3.googleusercontent.com/d/1Red23JZ7zN3yFFDQ5aVISnPvdFMLUduj=w800";
@@ -28,7 +69,6 @@
                 canvas.width = 128;
                 canvas.height = 128;
                 var ctx = canvas.getContext("2d");
-                // Zoom 1.45x ke bagian tengah gambar agar ruang kosong di pinggir terpotong
                 var zoom = 1.45;
                 var size = 128 * zoom;
                 var offset = (128 - size) / 2;
